@@ -122,6 +122,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args]()
+        for key, value in kwargs.items():
+            if key == "created_at" or key == "updated_at":
+                value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+            if key != "__class__":
+                setattr(new_instance, key, value)
         storage.save()
         print(new_instance.id)
         storage.save()
