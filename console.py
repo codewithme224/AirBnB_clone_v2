@@ -112,24 +112,41 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
+    def argument_paser(self, args):
+        """creates a dictionary from a list of strings"""
+        new_dict = {}
+        for arg in args:
+            if "=" in arg:
+                arg_paser = arg.split('=', 1)
+                key = arg_paser[0]
+                value = arg_paser[1]
+                if value[0] == value[-1] == '"':
+                    value = shlex.split(value)[0].replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        try:
+                            value = f;oat(value)
+                        except:
+                            continue
+            new_dict[key] = value
+       return new_dict
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        args = arg.split()
+        if len(args) == 0:
             print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
+            return False
+        if args[0] in classes:
+            new_dict = self.argument_paser(args[1:])
+            instance = classes[args[0]](**new_dict)
+        else:
             print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        for key, value in kwargs.items():
-            if key == "created_at" or key == "updated_at":
-                value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-            if key != "__class__":
-                setattr(new_instance, key, value)
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+            return False
+        print(instance.id)
+        instance.save()
 
     def help_create(self):
         """ Help information for the create method """
