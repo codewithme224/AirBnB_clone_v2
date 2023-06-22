@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 """ City Module for HBNB project """
-from models.base_model import BaseModel
 import sqlalchemy
 import models
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
-
+from os import getenv
 
 class City(BaseModel, Base):
     """ The city class"""
