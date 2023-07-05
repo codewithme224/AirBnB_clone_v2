@@ -3,16 +3,17 @@
 
 
 from fabric.api import local
-from datetime import datetime as dt, timedelta
-import os.path
+from datetime import datetime as dt
 
 
-def pack(folder):
+def do_pack():
     """Generates a .tgz archive from the contents of the web_static"""
-    if not os.path.exists('versions'):
-        os.makedirs('versions')
-    now = dt.now()
-    name = "web_static_{}{}{}{}{}{}.tgz".format(now.year, now.month, now.day,
-            now.hour, now.minute, now.second)
-    local("tar -cvzf versions/{} {}".format(name, folder))
-    return name
+    time = dt.now()
+
+    archive = 'web_static_' + time.strftime("%Y%m%d%H%M%S") + '.' + 'tgz'
+    local('mkdir -p versions')
+    create = local('tar -cvzf versions/{} web_static'.format(archive))
+    if create is not None:
+        return archive
+    else:
+        return None
