@@ -9,21 +9,27 @@ from os.path import exists
 
 env.hosts = ['54.162.90.117', '34.229.49.93']
 
+
 def do_deploy(archive_path):
     """Distributes an archive to your web servers"""
     if exists(archive_path) is False:
         return False
     try:
-        file_name = archive_path.split("/")[-1]
-        new_folder = ("/data/web_static/releases/" + file_name.split(".")[0])
+        file_name = archive_path.split("/")[-1].split(".")[0]
         put(archive_path, "/tmp/")
-        run("sudo mkdir -p {}".format(new_folder))
-        run("sudo tar -xzf /tmp/{} -C {}".format(file_name, new_folder))
-        run("sudo rm /tmp/{}".format(file_name))
-        run("sudo mv {}/web_static/* {}/".format(new_folder, new_folder))
-        run("sudo rm -rf {}/web_static".format(new_folder))
-        run("sudo rm -rf /data/web_static/current")
-        run("sudo ln -s {} /data/web_static/current".format(new_folder))
+
+        run("mkdir -p /data/web_static/releases/{}".format(file_name))
+        run("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/".format(
+            file_name, file_name))
+        run('rm -rf /tmp/{}.tgz'.format(file_name))
+
+        run(('mv /data/web_static/releases/{}/web_static/* ' +
+            '/data/web_static/releases/{}/').format(
+                file_name, file_name))
+        run('rm -rf /data/web_static/releases/{}/web_static'.format(file_name))
+        run('rm -rf /data/web_static/current')
+        run(('ln -s /data/web_static/releases/{}/' +
+            '/data/web_static/current').format(file_name))
         return True
     except Exception:
         return False
