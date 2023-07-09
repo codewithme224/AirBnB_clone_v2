@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """ The deploy function """
 
+import os
+from datetime import datetime
+import tarfile
 from fabric.api import *
 
 
@@ -12,11 +15,13 @@ def do_clean(number=0):
     """Function that deletes out-of-date archives"""
     number = int(number)
 
-    if number == 0:
-        number = 2
-    else:
-        number += 1
-
-    local('cd versions ; ls -t | tail -n +{} | xargs rm -rf'.format(number))
-    path = '/data/web_static/releases'
-    run('cd {} ; ls -t | tail -n +{} | xargs rm -rf'.format(path, number))
+     if number < 2:
+        number = 1
+    number += 1
+    number = str(number)
+    with lcd("versions"):
+        local("ls -1t | grep web_static_.*\.tgz | tail -n +" +
+              number + " | xargs -I {} rm -- {}")
+    with cd("/data/web_static/releases"):
+        run("ls -1t | grep web_static_ | tail -n +" +
+            number + " | xargs -I {} rm -rf -- {}")
