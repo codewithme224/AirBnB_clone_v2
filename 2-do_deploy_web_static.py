@@ -17,13 +17,14 @@ def do_pack():
     """
     Generate a compressed archive of the web_static folder
     """
-    try:
-        now = datetime.now().strftime("%Y%m%d%H%M%S")
-        local("mkdir -p versions")
-        file_path = "versions/web_static_{}.tgz".format(now)
-        local("tar -cvzf {} web_static".format(file_path))
-        return file_path
-    except Exception:
+    local("mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    archived_f_path = "versions/web_static_{}.tgz".format(date)
+    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
+
+    if t_gzip_archive.succeeded:
+        return archived_f_path
+    else:
         return None
 
 
