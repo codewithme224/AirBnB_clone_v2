@@ -47,10 +47,11 @@ class FileStorage:
     def reload(self):
         """Loads storage dictionary from file"""
         try:
-            with open(self.__file_path, 'r') as f:
-                jo = json.load(f)
-            for key in jo:
-                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+            with open(self.__file_path, 'r', encoding="utf-8") as f:
+                for jo in json.load(f).values():
+                    name = jo["__class__"]
+                    del jo["__class__"]
+                    self.new(eval(name)(**jo))
         except FileNotFoundError:
             pass
 
