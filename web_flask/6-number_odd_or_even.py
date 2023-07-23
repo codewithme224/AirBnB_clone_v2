@@ -46,10 +46,10 @@ def number_template(n):
 def number_odd_or_even(n):
     """ Display a HTML page only if n is an integer """
     if n % 2 == 0:
-        isEven = 'even'
+        evenness = 'even'
     else:
-        isOdd = 'odd'
-    return render_template('6-number_odd_or_even.html', n=n, isEven=isOdd)
+        evenness = 'odd'
+    return render_template('6-number_odd_or_even.html', n=n, evenness=evenness)
 
 
 if __name__ == "__main__":
