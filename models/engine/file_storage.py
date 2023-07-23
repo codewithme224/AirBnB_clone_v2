@@ -22,13 +22,12 @@ class FileStorage:
     def all(self, cls=None):
         """ Returns the list of objects of one type of class """
         if cls is None:
-            return self.__objects
-        else:
             new_dict = {}
             for key, value in self.__objects.items():
-                if cls == type(value):
+                if cls == value.__class__ or cls == value.__class__.__name__:
                     new_dict[key] = value
             return new_dict
+        return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
