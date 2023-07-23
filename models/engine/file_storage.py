@@ -48,7 +48,7 @@ class FileStorage:
         """Loads storage dictionary from file"""
         try:
             with open(self.__file_path, 'r', encoding="utf-8") as f:
-                for jo in json.load(f).values():
+                for jo in json.load(f).value():
                     name = jo["__class__"]
                     del jo["__class__"]
                     self.new(eval(name)(**jo))
